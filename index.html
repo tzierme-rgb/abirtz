@@ -3,265 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="pageTitle">LiveConnect - 100% Free Local Matches</title>
-    <link rel="icon" id="dynamicFavicon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iIzEwYjk4MSIvPjwvc3ZnPg==">
+    <title>LiveConnect - Private Room</title>
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iIzEwYjk4MSIvPjwvc3ZnPg==">
     
-    <link rel="preconnect" href="https://bedjfha.litracksm.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #050505; overflow-x: hidden; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; color: #f3f4f6; padding-bottom: 80px;}
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #000; overflow-x: hidden; user-select: none; -webkit-touch-callout: none; color: #fff; padding-bottom: 90px;}
         
-        .glass-panel { background: rgba(20, 20, 25, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .premium-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8); }
+        /* 200+ Micro Animations CSS */
+        .glass { background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glitch-text { animation: glitch 2s linear infinite; }
+        @keyframes glitch { 2%, 64% { transform: translate(2px,0) skew(0deg); } 4%, 60% { transform: translate(-2px,0) skew(0deg); } 62% { transform: translate(0,0) skew(5deg); } }
         
-        .pulse-badge { animation: pulseBadge 1.5s infinite; }
-        @keyframes pulseBadge { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        .radar-ping { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #10b981; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+        @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
 
-        .incoming-call { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-        .incoming-call.show { opacity: 1; pointer-events: all; }
+        .toast-enter { animation: slideUp 0.5s ease-out forwards; }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(10, 10, 12, 0.95); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 9000; padding-bottom: env(safe-area-inset-bottom); backdrop-filter: blur(20px); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #6b7280; font-size: 10px; gap: 4px; position: relative; cursor: pointer; }
-        .nav-item.active { color: #10b981; }
-
-        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        /* Fake Terminal Logs */
+        .terminal { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: #10b981; opacity: 0.7; }
+        
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
-    <div class="bg-zinc-900 border-b border-zinc-800 py-2 px-4 flex justify-between items-center z-50 relative cursor-pointer" onclick="triggerAction('verify_account')">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center text-zinc-400 border border-zinc-600">
-                <i class="fas fa-user"></i>
+    <div class="fixed top-0 left-0 w-full z-50 glass px-3 py-1.5 flex justify-between items-center border-b border-white/10">
+        <div class="flex items-center gap-2">
+            <div class="relative w-8 h-8">
+                <img src="https://ui-avatars.com/api/?name=Guest&background=random&color=fff" class="w-full h-full rounded-full border border-emerald-500">
+                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-black animate-pulse"></div>
             </div>
             <div>
-                <p class="text-[10px] text-zinc-400">Logged in as</p>
-                <p class="text-xs font-bold text-white flex items-center gap-1" id="autoUsername">Guest_... <i class="fas fa-circle text-emerald-500 text-[6px] animate-pulse"></i></p>
+                <p class="text-[9px] text-zinc-400">Account ID: <span id="autoId" class="text-white font-bold">G-0000</span></p>
+                <p class="text-[10px] font-bold text-red-500 glitch-text">Verification Pending ⚠️</p>
             </div>
         </div>
-        <div class="text-right">
-            <p class="text-[9px] text-red-400 font-bold mb-0.5">Profile 50% Complete</p>
-            <div class="w-20 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                <div class="w-1/2 h-full bg-red-500"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="fixed top-20 right-4 z-[8000] bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full flex items-center gap-2 shadow-lg cursor-pointer" onclick="triggerAction('viewers')">
-        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-        <span class="text-white text-xs font-bold font-mono" id="viewerCount">84</span>
-        <i class="fas fa-eye text-zinc-400 text-[10px]"></i>
-    </div>
-
-    <audio id="ringSnd" loop preload="none"><source src="https://assets.mixkit.co/active_storage/sfx/1353/1353-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="msgSnd" preload="none"><source src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="clickSnd" preload="none"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
-
-    <div class="incoming-call" id="incomingCall">
-        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.5)] mb-6 animate-pulse mt-10 relative">
-            <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-full h-full object-cover">
-        </div>
-        <h2 class="text-3xl font-black mb-1 tracking-tight text-white">Chloe is calling...</h2>
-        <p class="text-emerald-400 font-bold mb-16 text-sm bg-black/50 px-4 py-1 rounded-full"><i class="fas fa-video mr-1"></i> Private Cam Show</p>
-        <div class="flex gap-12">
-            <button onclick="dismissCall()" class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition group">
-                <i class="fas fa-phone-slash text-2xl text-white"></i>
-            </button>
-            <button onclick="triggerAction('accept_call')" class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,1)] hover:scale-110 transition pulse-badge">
-                <i class="fas fa-video text-3xl text-white"></i>
-            </button>
-        </div>
-        <p class="text-zinc-500 text-xs mt-8 animate-pulse">Connection encrypted via P2P</p>
-    </div>
-
-    <div id="fakeChatPopup" class="fixed bottom-20 right-4 z-[8500] glass-panel border border-emerald-500/30 rounded-2xl w-64 premium-shadow transform translate-y-[150%] transition-transform duration-500">
-        <div class="bg-zinc-800 p-3 rounded-t-2xl flex justify-between items-center border-b border-zinc-700">
-            <div class="flex items-center gap-2">
-                <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-8 h-8 rounded-full object-cover">
-                <div>
-                    <p class="text-xs font-bold text-white">Chloe <i class="fas fa-check-circle text-blue-400 text-[10px]"></i></p>
-                    <p class="text-[9px] text-emerald-400" id="typingStatus">Online</p>
-                </div>
-            </div>
-        </div>
-        <div class="p-4 bg-zinc-900/90 h-32 overflow-y-auto" id="chatArea" onclick="triggerAction('chat_click')">
-            </div>
-        <div class="p-3 bg-zinc-950 rounded-b-2xl cursor-pointer" onclick="triggerAction('reply_chat')">
-            <div class="bg-zinc-800 rounded-full py-2 px-3 text-[10px] text-zinc-500 flex justify-between">
-                Reply to Chloe... <i class="fas fa-paper-plane text-emerald-500"></i>
+        <div class="terminal text-right leading-tight">
+            <div id="sysLog1">Securing connection...</div>
+            <div id="sysLog2">Routing P2P via proxy</div>
+            <div class="text-white mt-1 font-sans text-[10px] bg-red-600/20 px-1 rounded border border-red-500/50 blink-warn" style="display:none;" id="batteryWarn">
+                <i class="fas fa-battery-quarter"></i> Low Battery! Verify fast.
             </div>
         </div>
     </div>
 
-    <header class="sticky top-0 z-40 glass-panel border-b border-white/5 p-3 premium-shadow" id="mainHeader">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-black tracking-tighter text-white flex items-center gap-1">
-                    LiveConnect
-                </h1>
-                <p class="text-[9px] text-emerald-400 font-bold tracking-widest uppercase flex items-center gap-1 mt-0.5">
-                    <i class="fas fa-map-marker-alt"></i> Finding locals...
-                </p>
-            </div>
-            <button onclick="triggerAction('upgrade')" class="bg-emerald-500 text-white px-5 py-2 rounded-full font-black text-xs uppercase shadow-[0_0_15px_rgba(16,185,129,0.4)] pulse-badge">
-                Verify Now
-            </button>
+    <div class="fixed top-14 right-3 z-40 flex flex-col items-end gap-1 pointer-events-none">
+        <div class="bg-black/80 px-2 py-1 rounded text-[10px] border border-white/10 flex items-center gap-1 shadow-lg shadow-emerald-500/20">
+            <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span>
+            <span id="liveViewers" class="font-mono font-bold text-emerald-400">142</span> looking now
         </div>
-    </header>
+        <div class="bg-black/80 px-2 py-1 rounded text-[9px] border border-white/10 text-zinc-400">
+            <i class="fas fa-location-arrow text-blue-400"></i> Local search active
+        </div>
+    </div>
 
-    <main class="max-w-5xl mx-auto p-4 pt-4 relative z-10">
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4" id="profileGrid"></div>
-        
-        <div class="mt-8 mb-4 glass-panel rounded-2xl p-6 text-center cursor-pointer border border-zinc-800 hover:border-emerald-500 transition" onclick="triggerAction('captcha')">
-            <h3 class="text-sm font-black text-white mb-3">Prove you are Human</h3>
-            <div class="bg-zinc-800 p-3 rounded-lg flex items-center justify-between border border-zinc-700 mx-auto max-w-[220px]">
-                <div class="flex items-center gap-3 text-white font-bold text-xs">
-                    <div class="w-5 h-5 border-2 border-zinc-500 rounded bg-zinc-900"></div>
-                    I am not a robot
-                </div>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/RecaptchaLogo.svg/120px-RecaptchaLogo.svg.png" class="h-5 grayscale brightness-200">
-            </div>
-        </div>
+    <main class="pt-16 pb-20 px-2 max-w-md mx-auto relative z-10" id="mainContent">
+        <div class="grid grid-cols-2 gap-2" id="gridArea"></div>
     </main>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="triggerAction('nav_home')">
-            <i class="fas fa-layer-group text-xl mb-1"></i><span>Discover</span>
+    <div id="callScreen" class="fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-xl">
+        <div class="absolute top-10 text-center">
+            <p class="text-emerald-500 text-sm font-mono mb-1"><i class="fas fa-lock"></i> End-to-End Encrypted</p>
+            <p class="text-white text-xl font-bold tracking-widest glitch-text">INCOMING CAM CALL</p>
         </div>
-        <div class="nav-item relative" onclick="triggerAction('nav_chat')">
-            <i class="fas fa-comment-dots text-xl mb-1"></i><span>Messages</span>
-            <span class="absolute top-1 right-2 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-lg">1</span>
+        
+        <div class="relative w-40 h-40 mt-10 mb-8">
+            <div class="radar-ping"></div>
+            <div class="radar-ping" style="animation-delay: 1s;"></div>
+            <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-full h-full rounded-full object-cover border-4 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.6)] relative z-10">
         </div>
-        <div class="nav-item" onclick="triggerAction('nav_profile')">
-            <i class="fas fa-user text-xl mb-1"></i><span>My Profile</span>
+        
+        <h2 class="text-4xl font-black text-white mb-2">Chloe, 21</h2>
+        <p class="text-zinc-400 text-sm mb-12">"I am waiting... please pick up! 💦"</p>
+
+        <div class="flex gap-10">
+            <button onclick="handleReject()" class="w-16 h-16 rounded-full bg-red-600 flex justify-center items-center text-white text-2xl shadow-[0_0_30px_rgba(220,38,38,0.5)] active:scale-90 transition">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+            <button onclick="fireRedirect()" class="w-16 h-16 rounded-full bg-emerald-500 flex justify-center items-center text-white text-2xl shadow-[0_0_30px_rgba(16,185,129,0.8)] active:scale-90 transition animate-bounce">
+                <i class="fas fa-video"></i>
+            </button>
         </div>
     </div>
 
-    <div id="redirectLoader" class="fixed inset-0 z-[999999] hidden bg-[#050505] flex flex-col items-center justify-center text-center p-4">
-        <div class="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-8"></div>
-        <h2 class="text-3xl font-black text-white mb-2 tracking-widest animate-pulse">VERIFYING</h2>
-        <p class="text-sm text-emerald-400 font-mono">Redirecting to secure verification gateway...</p>
+    <div id="chatInterface" class="fixed inset-x-0 bottom-0 top-[40%] bg-zinc-900 z-[9995] rounded-t-3xl shadow-[0_-20px_50px_rgba(0,0,0,0.8)] transform translate-y-full transition-transform duration-500 border-t border-emerald-500/30 flex flex-col">
+        <div class="flex items-center gap-3 p-4 border-b border-zinc-800 bg-zinc-900/90 rounded-t-3xl">
+            <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-10 h-10 rounded-full">
+            <div class="flex-1">
+                <h3 class="text-white font-bold text-sm">Chloe <i class="fas fa-check-circle text-blue-500 text-[10px]"></i></h3>
+                <p id="chatStatus" class="text-emerald-500 text-[10px] font-mono">typing...</p>
+            </div>
+            <button onclick="fireRedirect()" class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/50 animate-pulse">Call Back</button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-3" id="messageArea" onclick="fireRedirect()">
+            </div>
+        <div class="p-3 bg-black cursor-pointer" onclick="fireRedirect()">
+            <div class="w-full bg-zinc-800 rounded-full py-3 px-4 text-xs text-zinc-500 flex justify-between items-center border border-zinc-700">
+                <span>Type a message to Chloe...</span>
+                <i class="fas fa-paper-plane text-emerald-500"></i>
+            </div>
+        </div>
     </div>
+
+    <div id="toastContainer" class="fixed bottom-24 left-2 right-2 z-40 pointer-events-none flex flex-col gap-2"></div>
 
     <script>
-        const AFFILIATE_URL = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
-        let isRedirecting = false;
+        const OFFER_LINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
+        let clicked = false;
 
-        // Auto Generate Username
-        const randomId = Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('autoUsername').innerHTML = `Guest_${randomId} <i class="fas fa-circle text-emerald-500 text-[6px] animate-pulse"></i>`;
-
-        // Dynamic Viewer Count
+        // 1. Initial Setup
+        document.getElementById('autoId').innerText = "G-" + Math.floor(1000 + Math.random() * 9000);
+        
+        // 2. Fake Terminal Logs Loop
+        const logs = ["Bypassing firewalls...", "Matching algorithm active", "Locating nearest users", "Decrypting stream...", "Connecting to cam servers..."];
         setInterval(() => {
-            let current = parseInt(document.getElementById('viewerCount').innerText);
-            let change = Math.floor(Math.random() * 5) - 2; 
-            let newCount = current + change;
-            if(newCount < 75) newCount = 80;
-            if(newCount > 105) newCount = 98;
-            document.getElementById('viewerCount').innerText = newCount;
-        }, 3500);
+            document.getElementById('sysLog1').innerText = document.getElementById('sysLog2').innerText;
+            document.getElementById('sysLog2').innerText = logs[Math.floor(Math.random() * logs.length)];
+        }, 1500);
 
-        // Generate Profiles
-        const names = ["Sophia","Emily","Mia","Chloe","Lily","Zoe","Ava","Isabella"];
-        const imgs = [
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/zUhgoTkN_400x400.jpg?raw=true", 
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafbe3fc1960.jpeg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faeff2b47920.jpeg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faece2309a62.jpeg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images%201.jpg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/ZUQYQVFNR3-thumb.jpg?raw=true",
-            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/Z5CJD4WFFK.jpg?raw=true"
+        // 3. Battery Trick
+        setTimeout(() => { document.getElementById('batteryWarn').style.display = 'block'; }, 8000);
+
+        // 4. Populate Grid with dynamic shrinking distances
+        const girls = [
+            {n: "Chloe", a: 21, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true"},
+            {n: "Mia", a: 19, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafbe3fc1960.jpeg?raw=true"},
+            {n: "Lily", a: 24, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faeff2b47920.jpeg?raw=true"},
+            {n: "Zoe", a: 20, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faece2309a62.jpeg?raw=true"}
         ];
-
-        const grid = document.getElementById('profileGrid');
-        for(let i=0; i<8; i++) {
-            let age = Math.floor(Math.random() * 10) + 20;
-            let initialDist = (Math.random() * 2 + 0.5).toFixed(1); // 0.5 to 2.5 km
-            
-            grid.innerHTML += `
-            <div class="glass-panel rounded-2xl overflow-hidden cursor-pointer shadow-lg relative group aspect-[3/4]" onclick="triggerAction('profile_click')">
-                <img src="${imgs[i]}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" loading="lazy">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                <div class="absolute bottom-3 left-3 z-20">
-                    <h3 class="font-black text-white text-base flex items-center gap-1">${names[i]}, ${age} <i class="fas fa-check-circle text-blue-500 text-xs bg-white rounded-full"></i></h3>
-                    <p class="text-[10px] text-zinc-300 dist-text"><i class="fas fa-map-marker-alt text-emerald-400"></i> <span class="dist-val">${initialDist}</span> km away</p>
+        
+        girls.forEach((g, i) => {
+            let initialDist = (Math.random() * 3 + 1).toFixed(2);
+            document.getElementById('gridArea').innerHTML += `
+                <div class="relative rounded-xl overflow-hidden glass aspect-[3/4] active:scale-95 transition" onclick="fireRedirect()">
+                    <img src="${g.img}" class="w-full h-full object-cover opacity-90">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                    <div class="absolute top-2 left-2 flex gap-1">
+                        <span class="bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow">LIVE</span>
+                    </div>
+                    <div class="absolute bottom-2 left-2">
+                        <h4 class="font-bold text-sm text-white">${g.n}, ${g.a} <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span></h4>
+                        <p class="text-[9px] text-zinc-300 font-mono"><i class="fas fa-location-crosshairs text-emerald-400"></i> <span id="dist-${i}">${initialDist}</span> km</p>
+                    </div>
                 </div>
-            </div>`;
-        }
+            `;
+        });
 
-        // Dynamic Distance Decreaser (Psychological Trick)
+        // 5. Dynamic Distance Dropper
         setInterval(() => {
-            document.querySelectorAll('.dist-val').forEach(el => {
-                let currentDist = parseFloat(el.innerText);
-                if(currentDist > 0.2) {
-                    el.innerText = (currentDist - 0.1).toFixed(1); // Gradually gets closer
-                }
-            });
-        }, 10000);
-
-        // Trigger Call
-        setTimeout(() => {
-            if(!isRedirecting) {
-                document.getElementById('incomingCall').classList.add('show');
-                try{ document.getElementById('ringSnd').play(); }catch(e){}
-                if(navigator.vibrate) navigator.vibrate([500, 500, 500]);
+            for(let i=0; i<4; i++) {
+                let el = document.getElementById(`dist-${i}`);
+                let val = parseFloat(el.innerText);
+                if(val > 0.1) el.innerText = (val - 0.05).toFixed(2);
             }
-        }, 5000);
+        }, 3000);
 
-        // SMOOTH CALL DISMISS LOGIC
-        function dismissCall() {
-            try { document.getElementById('ringSnd').pause(); } catch(e) {}
-            document.getElementById('incomingCall').classList.remove('show');
+        // 6. Viewers fluctuator
+        setInterval(() => {
+            let v = parseInt(document.getElementById('liveViewers').innerText);
+            document.getElementById('liveViewers').innerText = v + (Math.floor(Math.random() * 7) - 3);
+        }, 2000);
+
+        // 7. Continuous Toast Notifications
+        const toastNames = ["User492", "Guest_91", "AlphaWolf", "LonelyGuy99", "Mark_T"];
+        const toastActions = ["just verified account! 🔒", "started a private cam show 🎥", "sent a gift to Mia 🎁", "upgraded to Premium 💎"];
+        
+        setInterval(() => {
+            if(clicked) return;
+            let t = document.createElement('div');
+            t.className = "bg-zinc-900/90 border border-zinc-700 p-2 rounded-lg text-[10px] text-zinc-300 shadow-lg flex items-center gap-2 toast-enter backdrop-blur-md";
+            t.innerHTML = `<i class="fas fa-info-circle text-emerald-500"></i> <b>${toastNames[Math.floor(Math.random()*toastNames.length)]}</b> ${toastActions[Math.floor(Math.random()*toastActions.length)]}`;
             
-            // After rejecting, trigger the fake chat logic
-            setTimeout(showFakeChat, 1500);
-        }
+            let tc = document.getElementById('toastContainer');
+            tc.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(()=>t.remove(), 500); }, 3000);
+        }, 5500);
 
-        // Fake Chat sequence after rejecting call
-        function showFakeChat() {
-            if(isRedirecting) return;
-            const chatPopup = document.getElementById('fakeChatPopup');
-            chatPopup.style.transform = 'translateY(0)';
-            try{ document.getElementById('msgSnd').play(); }catch(e){}
+        // 8. Trigger Call Screen
+        setTimeout(() => {
+            if(clicked) return;
+            document.getElementById('callScreen').classList.remove('opacity-0', 'pointer-events-none');
+            if(navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000]);
+        }, 4000);
 
-            const chatArea = document.getElementById('chatArea');
-            const status = document.getElementById('typingStatus');
-
-            // Initial Message
-            chatArea.innerHTML = `<div class="bg-zinc-800 text-xs text-slate-200 p-2.5 rounded-2xl rounded-tl-sm inline-block mb-2 border border-zinc-700 shadow-sm">Why did you cut my call? 🥺</div><br>`;
+        // 9. Handle Reject & Trigger Aggressive Chat
+        function handleReject() {
+            if(navigator.vibrate) navigator.vibrate([100]);
+            document.getElementById('callScreen').classList.add('opacity-0', 'pointer-events-none');
             
-            // Simulate Typing
-            setTimeout(() => {
-                status.innerHTML = `<span class="text-emerald-400">typing<span class="typing-dot inline-block">.</span><span class="typing-dot inline-block">.</span><span class="typing-dot inline-block">.</span></span>`;
-                
+            // Bring up chat immediately
+            let chat = document.getElementById('chatInterface');
+            chat.style.transform = 'translateY(0)';
+            
+            let area = document.getElementById('messageArea');
+            let status = document.getElementById('chatStatus');
+
+            // Sequence of fake messages to trap user
+            let seq = [
+                { t: 1000, m: "Hey! Why did you disconnect? 😢" },
+                { t: 2500, m: "I was getting undressed for you... 👙" },
+                { t: 4000, m: "It says your profile isn't verified yet." },
+                { t: 5500, m: "<div class='bg-emerald-500/10 border border-emerald-500/50 p-2 rounded text-emerald-400 font-bold text-center cursor-pointer' onclick='fireRedirect()'>Click Here to Verify So I Can Call You Back! 🔐</div>" }
+            ];
+
+            let delay = 0;
+            seq.forEach(step => {
+                delay += step.t;
                 setTimeout(() => {
-                    status.innerHTML = `Online`;
-                    try{ document.getElementById('msgSnd').play(); }catch(e){}
-                    chatArea.innerHTML += `<div class="bg-zinc-800 text-xs text-slate-200 p-2.5 rounded-2xl rounded-tl-sm inline-block mb-2 border border-emerald-500/30 shadow-sm animate-pulse cursor-pointer" onclick="triggerAction('chat_link')">Click here to verify your account so we can cam! <i class="fas fa-lock text-emerald-400"></i></div>`;
-                    chatArea.scrollTop = chatArea.scrollHeight;
-                }, 2500);
-            }, 1500);
+                    status.innerText = "typing...";
+                    setTimeout(() => {
+                        status.innerText = "Online";
+                        let msg = document.createElement('div');
+                        msg.className = "bg-zinc-800 p-3 rounded-2xl rounded-tl-sm text-sm text-zinc-100 max-w-[85%] border border-zinc-700/50 shadow-sm";
+                        msg.innerHTML = step.m;
+                        area.appendChild(msg);
+                        area.scrollTop = area.scrollHeight;
+                        if(navigator.vibrate) navigator.vibrate(50);
+                    }, 800);
+                }, delay - 800);
+            });
         }
 
-        // Main Redirect Action
-        function triggerAction(source) {
-            if(isRedirecting) return;
-            isRedirecting = true;
+        // 10. Master Redirect
+        function fireRedirect() {
+            if(clicked) return;
+            clicked = true;
+            if(navigator.vibrate) navigator.vibrate([50, 50]);
             
-            try { document.getElementById('ringSnd').pause(); document.getElementById('clickSnd').play(); } catch(e) {}
-            if(navigator.vibrate) navigator.vibrate([50, 50, 50]);
+            // Full screen flash effect before redirect
+            let flash = document.createElement('div');
+            flash.className = "fixed inset-0 bg-emerald-500 z-[999999] transition-opacity duration-200";
+            document.body.appendChild(flash);
             
-            document.getElementById('incomingCall').classList.remove('show');
-            document.getElementById('fakeChatPopup').style.transform = 'translateY(150%)';
-            document.getElementById('redirectLoader').classList.remove('hidden');
+            setTimeout(() => {
+                flash.innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center bg-black"><div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-emerald-400 font-mono text-sm tracking-widest">CONNECTING TO SECURE SERVER...</p></div>`;
+            }, 100);
 
-            setTimeout(() => { window.location.replace(AFFILIATE_URL); }, 1200);
+            setTimeout(() => { window.location.replace(OFFER_LINK); }, 800);
         }
     </script>
 </body>
