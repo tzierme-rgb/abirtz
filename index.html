@@ -12,7 +12,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Share+Tech+Mono&display=swap');
         body { font-family: 'Inter', sans-serif; background: #000; overflow-x: hidden; user-select: none; -webkit-touch-callout: none; color: #fff; padding-bottom: 90px;}
         
-        /* 200+ Micro Animations CSS */
         .glass { background: rgba(15, 15, 20, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .glitch-text { animation: glitch 2s linear infinite; }
         @keyframes glitch { 2%, 64% { transform: translate(2px,0) skew(0deg); } 4%, 60% { transform: translate(-2px,0) skew(0deg); } 62% { transform: translate(0,0) skew(5deg); } }
@@ -23,10 +22,7 @@
         .toast-enter { animation: slideUp 0.5s ease-out forwards; }
         @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Fake Terminal Logs */
         .terminal { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: #10b981; opacity: 0.7; }
-        
-        /* Hide Scrollbar */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -64,6 +60,12 @@
 
     <main class="pt-16 pb-20 px-2 max-w-md mx-auto relative z-10" id="mainContent">
         <div class="grid grid-cols-2 gap-2" id="gridArea"></div>
+        
+        <div class="mt-6 text-center">
+            <button onclick="fireRedirect()" class="w-full py-3 rounded-full bg-zinc-900 border border-emerald-500/30 text-emerald-500 font-bold text-xs animate-pulse">
+                <i class="fas fa-sync-alt mr-1"></i> Load More Locals
+            </button>
+        </div>
     </main>
 
     <div id="callScreen" class="fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-xl">
@@ -75,10 +77,10 @@
         <div class="relative w-40 h-40 mt-10 mb-8">
             <div class="radar-ping"></div>
             <div class="radar-ping" style="animation-delay: 1s;"></div>
-            <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-full h-full rounded-full object-cover border-4 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.6)] relative z-10">
+            <img id="callerImage" src="" class="w-full h-full rounded-full object-cover border-4 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.6)] relative z-10">
         </div>
         
-        <h2 class="text-4xl font-black text-white mb-2">Chloe, 21</h2>
+        <h2 class="text-4xl font-black text-white mb-2" id="callerName">Chloe, 21</h2>
         <p class="text-zinc-400 text-sm mb-12">"I am waiting... please pick up! 💦"</p>
 
         <div class="flex gap-10">
@@ -93,9 +95,9 @@
 
     <div id="chatInterface" class="fixed inset-x-0 bottom-0 top-[40%] bg-zinc-900 z-[9995] rounded-t-3xl shadow-[0_-20px_50px_rgba(0,0,0,0.8)] transform translate-y-full transition-transform duration-500 border-t border-emerald-500/30 flex flex-col">
         <div class="flex items-center gap-3 p-4 border-b border-zinc-800 bg-zinc-900/90 rounded-t-3xl">
-            <img src="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true" class="w-10 h-10 rounded-full">
+            <img id="chatImage" src="" class="w-10 h-10 rounded-full object-cover">
             <div class="flex-1">
-                <h3 class="text-white font-bold text-sm">Chloe <i class="fas fa-check-circle text-blue-500 text-[10px]"></i></h3>
+                <h3 class="text-white font-bold text-sm"><span id="chatName">Chloe</span> <i class="fas fa-check-circle text-blue-500 text-[10px]"></i></h3>
                 <p id="chatStatus" class="text-emerald-500 text-[10px] font-mono">typing...</p>
             </div>
             <button onclick="fireRedirect()" class="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/50 animate-pulse">Call Back</button>
@@ -104,7 +106,7 @@
             </div>
         <div class="p-3 bg-black cursor-pointer" onclick="fireRedirect()">
             <div class="w-full bg-zinc-800 rounded-full py-3 px-4 text-xs text-zinc-500 flex justify-between items-center border border-zinc-700">
-                <span>Type a message to Chloe...</span>
+                <span>Type a message...</span>
                 <i class="fas fa-paper-plane text-emerald-500"></i>
             </div>
         </div>
@@ -115,6 +117,53 @@
     <script>
         const OFFER_LINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
         let clicked = false;
+
+        // User provided Image DB
+        const imageDB = [
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/zUhgoTkN_400x400.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/Edtlj7HUcAERuPf.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/C2CDnINUsAArk4M.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/918ef2fd-89ae-4629-97c1-46aed0bcf444.webp?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/8cd9b917-2a23-4f57-84a3-bf06bc59ff04.webp?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/22.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/15.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/post94873717708903160IMG_2631.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/photo_2026-02-01_19-40-54.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafd6212320b.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafcae692d2c.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafc930da7d6.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafbe3fc1960.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafb9e5a7fc5.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafb12fc3117.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faf934c26dee.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faf445819aa1.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faf376edf756.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faf17e56f793.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faf12db448e5.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faeff2b47920.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faee27525158.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faece2309a62.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faead4ae3571.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fae8e424e078.jpeg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images4.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images%201.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/ZUQYQVFNR3-thumb.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/Z5CJD4WFFK.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/WZT9ONOAVQ.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/T4APYLQ1UD.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/QYVIU1LTLK-thumb.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/GsKNHUXXsAA_z4C.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/HE7LupIXEAA2xnS.jpg?raw=true",
+            "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/EhU-uxVU4AEV_-n.jpg?raw=true"
+        ];
+
+        const fakeNames = ["Chloe", "Mia", "Lily", "Zoe", "Emma", "Ava", "Isabella", "Sophia", "Riley", "Aria", "Scarlett", "Layla"];
+
+        // Helper to get random item
+        const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+        // Shuffle array safely
+        const shuffledImages = [...imageDB].sort(() => 0.5 - Math.random());
 
         // 1. Initial Setup
         document.getElementById('autoId').innerText = "G-" + Math.floor(1000 + Math.random() * 9000);
@@ -129,37 +178,43 @@
         // 3. Battery Trick
         setTimeout(() => { document.getElementById('batteryWarn').style.display = 'block'; }, 8000);
 
-        // 4. Populate Grid with dynamic shrinking distances
-        const girls = [
-            {n: "Chloe", a: 21, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true"},
-            {n: "Mia", a: 19, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafbe3fc1960.jpeg?raw=true"},
-            {n: "Lily", a: 24, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faeff2b47920.jpeg?raw=true"},
-            {n: "Zoe", a: 20, img: "https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faece2309a62.jpeg?raw=true"}
-        ];
-        
-        girls.forEach((g, i) => {
+        // 4. Populate Grid dynamically with 8 random images from your list
+        for(let i=0; i<8; i++) {
             let initialDist = (Math.random() * 3 + 1).toFixed(2);
+            let age = Math.floor(Math.random() * 8) + 18;
+            let name = fakeNames[i % fakeNames.length];
+            
             document.getElementById('gridArea').innerHTML += `
                 <div class="relative rounded-xl overflow-hidden glass aspect-[3/4] active:scale-95 transition" onclick="fireRedirect()">
-                    <img src="${g.img}" class="w-full h-full object-cover opacity-90">
+                    <img src="${shuffledImages[i]}" loading="lazy" class="w-full h-full object-cover opacity-90">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                     <div class="absolute top-2 left-2 flex gap-1">
                         <span class="bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow">LIVE</span>
                     </div>
                     <div class="absolute bottom-2 left-2">
-                        <h4 class="font-bold text-sm text-white">${g.n}, ${g.a} <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span></h4>
+                        <h4 class="font-bold text-sm text-white">${name}, ${age} <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span></h4>
                         <p class="text-[9px] text-zinc-300 font-mono"><i class="fas fa-location-crosshairs text-emerald-400"></i> <span id="dist-${i}">${initialDist}</span> km</p>
                     </div>
                 </div>
             `;
-        });
+        }
+
+        // Setup Main Caller (using the 9th image in shuffled array or a random one)
+        const mainCallerImg = shuffledImages[8] || shuffledImages[0];
+        const mainCallerName = getRandom(fakeNames);
+        document.getElementById('callerImage').src = mainCallerImg;
+        document.getElementById('chatImage').src = mainCallerImg;
+        document.getElementById('callerName').innerText = `${mainCallerName}, 21`;
+        document.getElementById('chatName').innerText = mainCallerName;
 
         // 5. Dynamic Distance Dropper
         setInterval(() => {
-            for(let i=0; i<4; i++) {
+            for(let i=0; i<8; i++) {
                 let el = document.getElementById(`dist-${i}`);
-                let val = parseFloat(el.innerText);
-                if(val > 0.1) el.innerText = (val - 0.05).toFixed(2);
+                if(el) {
+                    let val = parseFloat(el.innerText);
+                    if(val > 0.1) el.innerText = (val - 0.05).toFixed(2);
+                }
             }
         }, 3000);
 
@@ -171,13 +226,13 @@
 
         // 7. Continuous Toast Notifications
         const toastNames = ["User492", "Guest_91", "AlphaWolf", "LonelyGuy99", "Mark_T"];
-        const toastActions = ["just verified account! 🔒", "started a private cam show 🎥", "sent a gift to Mia 🎁", "upgraded to Premium 💎"];
+        const toastActions = ["just verified account! 🔒", "started a private cam show 🎥", "sent a gift 🎁", "upgraded to Premium 💎"];
         
         setInterval(() => {
             if(clicked) return;
             let t = document.createElement('div');
             t.className = "bg-zinc-900/90 border border-zinc-700 p-2 rounded-lg text-[10px] text-zinc-300 shadow-lg flex items-center gap-2 toast-enter backdrop-blur-md";
-            t.innerHTML = `<i class="fas fa-info-circle text-emerald-500"></i> <b>${toastNames[Math.floor(Math.random()*toastNames.length)]}</b> ${toastActions[Math.floor(Math.random()*toastActions.length)]}`;
+            t.innerHTML = `<i class="fas fa-info-circle text-emerald-500"></i> <b>${getRandom(toastNames)}</b> ${getRandom(toastActions)}`;
             
             let tc = document.getElementById('toastContainer');
             tc.appendChild(t);
@@ -196,14 +251,12 @@
             if(navigator.vibrate) navigator.vibrate([100]);
             document.getElementById('callScreen').classList.add('opacity-0', 'pointer-events-none');
             
-            // Bring up chat immediately
             let chat = document.getElementById('chatInterface');
             chat.style.transform = 'translateY(0)';
             
             let area = document.getElementById('messageArea');
             let status = document.getElementById('chatStatus');
 
-            // Sequence of fake messages to trap user
             let seq = [
                 { t: 1000, m: "Hey! Why did you disconnect? 😢" },
                 { t: 2500, m: "I was getting undressed for you... 👙" },
@@ -235,7 +288,6 @@
             clicked = true;
             if(navigator.vibrate) navigator.vibrate([50, 50]);
             
-            // Full screen flash effect before redirect
             let flash = document.createElement('div');
             flash.className = "fixed inset-0 bg-emerald-500 z-[999999] transition-opacity duration-200";
             document.body.appendChild(flash);
