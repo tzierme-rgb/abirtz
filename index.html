@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LiveConnect - Private Room</title>
+    <title>🔴 1 New Private Video Call - LiveConnect</title>
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iIzEwYjk4MSIvPjwvc3ZnPg==">
+    
+    <meta name="description" content="Chloe is waiting for you in the private room. Tap to join the live cam now! 💦">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🔴 1 New Private Video Call - LiveConnect">
+    <meta property="og:description" content="Chloe sent you a private video invitation. Only 1 spot left! Tap to join. 🔞">
+    
+    <meta property="og:image" content="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/zUhgoTkN_400x400.jpg?raw=true">
+    <meta property="og:image:secure_url" content="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/zUhgoTkN_400x400.jpg?raw=true">
+    <meta property="og:image:width" content="400">
+    <meta property="og:image:height" content="400">
+    
+    <meta property="og:image" content="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5faff59e27102.jpeg?raw=true">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🔴 1 New Private Video Call - LiveConnect">
+    <meta name="twitter:description" content="Chloe is getting undressed for you... Connect before she leaves! 👙">
+    <meta name="twitter:image" content="https://github.com/gdjg536ydiv-bot/affizerp/blob/main/images_5fafbe3fc1960.jpeg?raw=true">
+    
+    <meta name="theme-color" content="#10b981">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -160,9 +180,7 @@
 
         const fakeNames = ["Chloe", "Mia", "Lily", "Zoe", "Emma", "Ava", "Isabella", "Sophia", "Riley", "Aria", "Scarlett", "Layla"];
 
-        // Helper to get random item
         const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
-        // Shuffle array safely
         const shuffledImages = [...imageDB].sort(() => 0.5 - Math.random());
 
         // 1. Initial Setup
@@ -178,7 +196,7 @@
         // 3. Battery Trick
         setTimeout(() => { document.getElementById('batteryWarn').style.display = 'block'; }, 8000);
 
-        // 4. Populate Grid dynamically with 8 random images from your list
+        // 4. Populate Grid dynamically with 8 random images
         for(let i=0; i<8; i++) {
             let initialDist = (Math.random() * 3 + 1).toFixed(2);
             let age = Math.floor(Math.random() * 8) + 18;
@@ -199,7 +217,7 @@
             `;
         }
 
-        // Setup Main Caller (using the 9th image in shuffled array or a random one)
+        // Setup Main Caller
         const mainCallerImg = shuffledImages[8] || shuffledImages[0];
         const mainCallerName = getRandom(fakeNames);
         document.getElementById('callerImage').src = mainCallerImg;
@@ -257,11 +275,13 @@
             let area = document.getElementById('messageArea');
             let status = document.getElementById('chatStatus');
 
+            // Updated Aggressive Chat Loop
             let seq = [
-                { t: 1000, m: "Hey! Why did you disconnect? 😢" },
+                { t: 1000, m: "Hey! Why did you cut my call? 😢" },
                 { t: 2500, m: "I was getting undressed for you... 👙" },
-                { t: 4000, m: "It says your profile isn't verified yet." },
-                { t: 5500, m: "<div class='bg-emerald-500/10 border border-emerald-500/50 p-2 rounded text-emerald-400 font-bold text-center cursor-pointer' onclick='fireRedirect()'>Click Here to Verify So I Can Call You Back! 🔐</div>" }
+                { t: 4500, m: "It says your profile isn't verified yet, that's why we can't talk." },
+                { t: 6500, m: "Verify your account in 30 seconds so I can show you everything! 🔐" },
+                { t: 8000, m: "<div class='bg-emerald-500/10 border border-emerald-500/50 p-2 rounded text-emerald-400 font-bold text-center cursor-pointer' onclick='fireRedirect()'>CLICK HERE TO VERIFY & START CAM 🔞</div>" }
             ];
 
             let delay = 0;
