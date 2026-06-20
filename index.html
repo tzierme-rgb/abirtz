@@ -3,260 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔴 VIP Live Room</title>
-    
-    <meta property="og:title" content="🔴 VIP Room Invite...">
-    <meta property="og:description" content="The live session has started. Tap to join the waiting room! 💦">
+    <title>🔴 Live Private Room - HD Stream</title>
+    <meta name="theme-color" content="#000000">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🔴 (1) Incoming Private Video Call...">
+    <meta property="og:description" content="▶ 🔘──────── 0:14 (Voice Message) Tap to accept the invitation and join the live cam now! 💦">
     <meta property="og:image" content="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true">
+    <meta property="og:image:secure_url" content="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="500">
+    <meta property="og:image:height" content="500">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🔴 (1) Incoming Private Video Call...">
+    <meta name="twitter:description" content="▶ 🔘──────── 0:14 (Voice Message) Tap to accept the invitation and join the live cam now! 💦">
+    <meta name="twitter:image" content="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background: #000; overflow: hidden; user-select: none; color: #fff; }
         
-        .video-bg { filter: blur(15px) brightness(0.4); transform: scale(1.1); transition: filter 2s ease; }
-        .glass { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .blur-bg { filter: blur(15px) brightness(0.4); transform: scale(1.1); transition: all 0.5s ease; }
+        .glass-panel { background: rgba(20, 20, 25, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Chat Animations */
-        @keyframes slideUpMsg { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .msg-enter { animation: slideUpMsg 0.4s ease-out forwards; }
+        /* Loading Spinner */
+        .spinner { width: 50px; height: 50px; border: 4px solid rgba(16, 185, 129, 0.3); border-top: 4px solid #10b981; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Typing Dots */
-        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        /* Glitch Warning */
+        .glitch-warn { animation: flashRed 1.5s infinite; }
+        @keyframes flashRed { 0%, 100% { color: #ef4444; } 50% { color: #fca5a5; text-shadow: 0 0 10px #ef4444; } }
 
-        /* Pulse Button */
-        @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 100% { box-shadow: 0 0 0 25px rgba(16, 185, 129, 0); } }
-        .pulse-btn { animation: pulse-ring 1.5s infinite; }
-        
-        .shake-call { animation: shake 0.5s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } }
+        /* Fake System Notification */
+        .sys-toast { transform: translateY(-150%); animation: dropDown 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes dropDown { to { transform: translateY(0); } }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
 
     <div class="absolute inset-0 z-0">
-        <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover video-bg" id="bgImg">
+        <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover blur-bg" id="bgImage">
     </div>
 
-    <audio id="ringtone" loop>
-        <source src="https://www.soundjay.com/phone/phone-calling-1.mp3" type="audio/mpeg">
-    </audio>
-
-    <div id="phase1-gate" class="fixed inset-0 z-[300] bg-black/80 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
-        <div class="w-24 h-24 rounded-full border-4 border-emerald-500 overflow-hidden mb-6 pulse-btn">
-            <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover">
-        </div>
-        <h2 class="text-2xl font-black text-white mb-2">Private Room #69</h2>
-        <p class="text-emerald-400 font-mono text-sm mb-8"><i class="fas fa-circle text-[8px] animate-pulse relative -top-0.5 mr-1"></i> LIVE NOW</p>
-        
-        <button onclick="enterWaitingRoom()" class="w-full max-w-xs py-4 bg-emerald-500 text-black font-black text-lg rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.4)] transition transform active:scale-95">
-            TAP TO ENTER ROOM
-        </button>
-    </div>
-
-    <div id="phase2-waiting" class="fixed inset-0 z-50 hidden flex flex-col justify-between py-8 px-4 pointer-events-none">
-        
-        <div class="flex justify-between items-center">
-            <div class="glass px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
-                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span id="viewerCount">1,842</span> Viewers
-            </div>
-            <div class="text-[10px] text-zinc-400 font-mono text-right">
-                Encrypted P2P<br><span class="text-emerald-500">Secure</span>
-            </div>
-        </div>
-
-        <div class="flex-1 flex flex-col justify-end pb-10">
-            <div class="glass w-full max-w-sm mx-auto p-4 rounded-2xl border-emerald-500/30 border">
-                <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
-                    <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-10 h-10 rounded-full object-cover">
-                    <div>
-                        <h3 class="font-bold text-sm text-white">Host is online</h3>
-                        <p class="text-xs text-emerald-400 font-mono" id="systemStatus">Setting up camera...</p>
-                    </div>
-                </div>
-                
-                <div id="liveChat" class="space-y-3 min-h-[100px] flex flex-col justify-end">
-                    <div id="typingIndicator" class="hidden flex gap-1 items-center px-2 py-1">
-                        <span class="text-xs text-zinc-400 mr-2">Host is typing</span>
-                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
-                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
-                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
-                    </div>
-                </div>
-            </div>
+    <div id="sysNotification" class="fixed top-4 left-4 right-4 z-[9999] bg-zinc-900/95 border-l-4 border-red-500 p-3 rounded shadow-2xl sys-toast hidden flex items-start gap-3">
+        <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+        <div>
+            <h4 class="text-sm font-bold text-white">Connection Alert</h4>
+            <p class="text-xs text-zinc-400">Anonymous session expires in <span id="countdown" class="text-red-400 font-mono font-bold">01:59</span>. Claim your guest pass now.</p>
         </div>
     </div>
 
-    <div id="phase3-call" class="fixed inset-0 z-[100] hidden flex flex-col justify-between items-center py-20 px-6 bg-black/40 backdrop-blur-md transition-all">
-        <div class="text-center mt-10">
-            <h2 class="text-emerald-400 font-mono text-sm tracking-widest mb-4 animate-pulse">🎯 YOU WERE SELECTED!</h2>
-            <div class="w-32 h-32 rounded-full border-4 border-white p-1 mx-auto mb-4 relative shadow-[0_0_50px_rgba(255,255,255,0.3)] shake-call">
-                <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full rounded-full object-cover">
-            </div>
-            <h2 class="text-3xl font-black text-white mb-2">Host Calling...</h2>
-            <p class="text-zinc-300 text-sm">Private Video Request</p>
-        </div>
-
-        <div class="flex gap-12 items-center mb-10">
-            <button onclick="declineCall()" class="flex flex-col items-center gap-2 cursor-pointer transition transform active:scale-90">
-                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-                    <i class="fas fa-times text-2xl text-white"></i>
-                </div>
-                <span class="text-white text-[10px] font-bold tracking-wider">REJECT</span>
-            </button>
+    <div id="ageGate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-sm p-6 rounded-2xl text-center shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+            <i class="fas fa-shield-alt text-4xl text-emerald-500 mb-4"></i>
+            <h2 class="text-2xl font-black text-white mb-2">Age Verification</h2>
+            <p class="text-sm text-zinc-400 mb-6">This private broadcast contains mature content. You must be 18 years or older to enter.</p>
             
-            <button onclick="acceptCall()" class="flex flex-col items-center gap-2 cursor-pointer transition transform active:scale-90">
-                <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center pulse-btn shadow-lg">
-                    <i class="fas fa-video text-3xl text-white"></i>
-                </div>
-                <span class="text-white text-[10px] font-bold tracking-wider">ACCEPT & JOIN</span>
-            </button>
-        </div>
-    </div>
-
-    <div id="phase4-brainwash" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95">
-        <div class="glass w-full max-w-sm rounded-3xl overflow-hidden border border-emerald-500/30 relative">
-            
-            <div class="h-1 w-full bg-zinc-800 absolute top-0 left-0">
-                <div class="h-full bg-emerald-500 w-1/3" style="animation: loadBar 2s forwards;"></div>
-            </div>
-            <style>@keyframes loadBar { to { w-full } }</style>
-
-            <div class="p-6 text-center mt-2">
-                <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-lock text-2xl text-red-500"></i>
-                </div>
-                <h3 class="text-2xl font-black text-white mb-2">Room Locked</h3>
-                
-                <div class="bg-black/50 rounded-xl p-4 border border-zinc-800 mb-6 text-left space-y-3">
-                    <p class="text-sm text-zinc-300">You successfully caught the private call! But before we start...</p>
-                    <div class="flex gap-2 items-start">
-                        <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
-                        <p class="text-[13px] text-zinc-400">Please verify you are human to prevent stream bots.</p>
-                    </div>
-                    <div class="flex gap-2 items-start">
-                        <i class="fas fa-envelope text-emerald-500 mt-0.5"></i>
-                        <p class="text-[13px] text-zinc-400">Create a <strong class="text-white">Free Account</strong> with your <strong class="text-emerald-400">Email Address</strong> on the next page.</p>
-                    </div>
-                    <div class="flex gap-2 items-start">
-                        <i class="fas fa-infinity text-emerald-500 mt-0.5"></i>
-                        <p class="text-[13px] text-zinc-400">Done! You get <strong class="text-white">lifetime 24/7 access</strong> without verifying again.</p>
-                    </div>
-                </div>
-
-                <button onclick="finalRedirect()" class="w-full py-4 bg-emerald-500 text-black font-black text-lg rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:scale-105 transition transform flex items-center justify-center gap-2">
-                    <i class="fas fa-user-check"></i> VERIFY EMAIL NOW
+            <div class="space-y-3">
+                <button onclick="passAgeGate()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.4)] text-lg">
+                    I AM 18 OR OLDER
+                </button>
+                <button onclick="rejectAge()" class="w-full py-3 glass-panel text-zinc-400 font-bold rounded-xl text-sm">
+                    I am under 18
                 </button>
             </div>
+            <p class="text-[10px] text-zinc-500 mt-4"><i class="fas fa-user-secret"></i> 100% Anonymous & Secure</p>
         </div>
+    </div>
+
+    <main id="videoPlayer" class="relative z-50 w-full h-full flex flex-col justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
+        
+        <div id="playerUI" class="text-center w-full px-4 flex flex-col items-center cursor-pointer" onclick="fireMasterRedirect()">
+            
+            <div id="bufferState" class="flex flex-col items-center">
+                <div class="spinner mb-6"></div>
+                <h3 class="text-emerald-400 font-mono tracking-widest text-sm animate-pulse">CONNECTING TO CAM...</h3>
+            </div>
+
+            <div id="errorState" class="hidden flex flex-col items-center w-full max-w-sm glass-panel p-6 rounded-2xl border-red-500/30">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/50">
+                    <i class="fas fa-lock text-2xl text-red-500 glitch-warn"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-2">Stream Paused</h2>
+                <p class="text-sm text-zinc-400 mb-6">Anonymous viewing limit reached. Please grab a free <span class="text-emerald-400 font-bold">Guest Pass</span> to unlock the private room.</p>
+                
+                <button class="w-full py-4 bg-emerald-500 text-black font-black text-sm rounded-xl uppercase tracking-wider shadow-[0_0_20px_rgba(16,185,129,0.5)] flex justify-center items-center gap-2 hover:scale-105 transition transform">
+                    <i class="fas fa-ticket-alt"></i> Claim Free Guest Pass
+                </button>
+                <p class="text-[10px] text-zinc-400 mt-3 flex items-center justify-center gap-1">
+                    <i class="fas fa-check-circle text-emerald-500"></i> No Credit Card Required • 100% Free
+                </p>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
+            <div class="flex items-center justify-between text-white text-xl mb-2">
+                <div class="flex gap-4">
+                    <i class="fas fa-pause cursor-pointer"></i>
+                    <i class="fas fa-volume-up cursor-pointer"></i>
+                    <span class="text-xs font-mono bg-red-600 px-1.5 py-0.5 rounded text-white font-bold ml-2">LIVE</span>
+                </div>
+                <div class="flex gap-4">
+                    <i class="fas fa-cog cursor-pointer text-emerald-500 animate-spin" style="animation-duration: 3s;"></i>
+                    <i class="fas fa-expand cursor-pointer"></i>
+                </div>
+            </div>
+            <div class="w-full h-1 bg-zinc-800 rounded-full relative">
+                <div class="absolute top-0 left-0 h-full bg-emerald-500 w-full opacity-50 pulse-bar"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="hidden">
+        <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true">
     </div>
 
     <script>
-        const SMARTLINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
-        let vibeInterval;
+        const OFFER_LINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
+        let actionTriggered = false;
 
-        // Start the journey
-        function enterWaitingRoom() {
-            // Unmute trick for mobile browsers
-            document.getElementById('ringtone').play().then(() => {
-                document.getElementById('ringtone').pause(); 
-            }).catch(e => console.log(e));
-
+        // Sequence 1: User passes Age Gate (Micro-Commitment)
+        function passAgeGate() {
             if(navigator.vibrate) navigator.vibrate(50);
             
-            document.getElementById('phase1-gate').classList.add('hidden');
-            document.getElementById('phase2-waiting').classList.remove('hidden');
+            // Hide Age Gate
+            document.getElementById('ageGate').classList.add('opacity-0', 'pointer-events-none');
             
-            startLiveSimulation();
+            // Show Player
+            const player = document.getElementById('videoPlayer');
+            player.classList.remove('opacity-0', 'pointer-events-none');
+            
+            // Start the fake buffering sequence
+            startPlayerSequence();
         }
 
-        // Timeline Logic
-        function startLiveSimulation() {
-            const chat = document.getElementById('liveChat');
-            const typeInd = document.getElementById('typingIndicator');
-            const sysStat = document.getElementById('systemStatus');
+        function rejectAge() {
+            window.location.href = "https://www.google.com";
+        }
 
-            // 1s: Host starts typing
-            setTimeout(() => { typeInd.classList.remove('hidden'); }, 1000);
-
-            // 3s: First Message
+        // Sequence 2: The Player Illusion
+        function startPlayerSequence() {
+            // After 3 seconds of "buffering", show the Error/Verification Lock
             setTimeout(() => {
-                typeInd.classList.add('hidden');
-                addMsg("Hey guys! Room is getting full... 🔥");
+                document.getElementById('bufferState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('bgImage').style.filter = "blur(25px) brightness(0.2)"; // Darken background to focus on CTA
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }, 3000);
 
-            // 4.5s: Host typing again
-            setTimeout(() => { typeInd.classList.remove('hidden'); }, 4500);
-
-            // 6s: Second Message (The Lottery hook)
+            // Sequence 3: Trigger System Urgency Notification after 6 seconds
             setTimeout(() => {
-                typeInd.classList.add('hidden');
-                addMsg("I'm picking ONE random person right now for a private 1-on-1 call... ❤️");
-                sysStat.innerText = "Selecting random viewer...";
-                sysStat.classList.add('text-red-400', 'animate-pulse');
+                document.getElementById('sysNotification').classList.remove('hidden');
+                startCountdown();
+                if(navigator.vibrate) navigator.vibrate(200);
             }, 6000);
-
-            // 9s: Selection made
-            setTimeout(() => {
-                sysStat.innerText = "Viewer selected. Initiating P2P Call...";
-            }, 9000);
-
-            // 10s: TRIGGER THE CALL
-            setTimeout(() => {
-                triggerCall();
-            }, 10500);
         }
 
-        function addMsg(text) {
-            const div = document.createElement('div');
-            div.className = "bg-zinc-800/80 text-white text-sm px-4 py-2 rounded-2xl rounded-tl-none w-max msg-enter border border-white/5";
-            div.innerText = text;
-            const chatBox = document.getElementById('liveChat');
-            chatBox.insertBefore(div, document.getElementById('typingIndicator'));
+        // Timer Logic for the System Warning
+        function startCountdown() {
+            let time = 119; // 1m 59s
+            const display = document.getElementById('countdown');
+            setInterval(() => {
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                m = m < 10 ? "0" + m : m;
+                s = s < 10 ? "0" + s : s;
+                display.textContent = m + ":" + s;
+                if(time > 0) time--;
+            }, 1000);
         }
 
-        function triggerCall() {
-            // Switch UI
-            document.getElementById('phase2-waiting').classList.add('hidden');
-            document.getElementById('phase3-call').classList.remove('hidden');
-            document.getElementById('bgImg').classList.remove('video-bg');
-            document.getElementById('bgImg').style.filter = "blur(5px) brightness(0.6)";
+        // Sequence 4: The Ultimate Redirect
+        function fireMasterRedirect() {
+            if(actionTriggered) return;
+            actionTriggered = true;
+            if(navigator.vibrate) navigator.vibrate([50, 50]);
+            
+            // Create a realistic "Routing" screen before hitting the affiliate link
+            let overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 z-[999999] bg-black flex flex-col items-center justify-center transition-opacity duration-300";
+            overlay.innerHTML = `
+                <i class="fas fa-ticket-alt text-4xl text-emerald-500 mb-4 mb-4"></i>
+                <h2 class="text-white text-lg font-bold mb-1">Generating Guest Pass...</h2>
+                <p class="text-zinc-500 text-xs font-mono">Please complete the final step on the next page.</p>
+                <div class="w-48 h-1 bg-zinc-800 rounded-full mt-6 overflow-hidden">
+                    <div class="h-full bg-emerald-500 w-1/2 relative loading-bar"></div>
+                </div>
+            `;
+            
+            // Add custom animation for the routing bar inline
+            let style = document.createElement('style');
+            style.innerHTML = `@keyframes load { 0% { left: -50%; } 100% { left: 100%; } } .loading-bar { animation: load 1s infinite linear; }`;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(overlay);
 
-            // Play Audio & Vibrate
-            document.getElementById('ringtone').play();
-            if(navigator.vibrate) {
-                vibeInterval = setInterval(() => navigator.vibrate([500, 200, 500]), 1200);
-            }
-        }
-
-        function declineCall() {
-            alert("Warning: You will lose your VIP spot!");
-        }
-
-        function acceptCall() {
-            // Stop Audio/Vibe
-            document.getElementById('ringtone').pause();
-            if(vibeInterval) clearInterval(vibeInterval);
-            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-
-            // Switch to Brainwash
-            document.getElementById('phase3-call').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('phase3-call').classList.add('hidden');
-                document.getElementById('phase4-brainwash').classList.remove('hidden');
-                document.getElementById('bgImg').style.filter = "blur(30px) brightness(0.2)";
-            }, 300);
-        }
-
-        function finalRedirect() {
-            if(navigator.vibrate) navigator.vibrate(50);
-            window.location.replace(SMARTLINK);
+            // Redirect to the actual smartlink after 1.2 seconds
+            setTimeout(() => { window.location.replace(OFFER_LINK); }, 1200);
         }
     </script>
 </body>
