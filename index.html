@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔴 LIVE: Private Video Chat</title>
+    <title>🔴 VIP Live Room</title>
     
-    <meta property="og:title" content="🔴 (1) Incoming Private Video Call...">
-    <meta property="og:description" content="▶ 🔘──────── 0:14 (Voice Message) Tap to answer the call now! 💦">
+    <meta property="og:title" content="🔴 VIP Room Invite...">
+    <meta property="og:description" content="The live session has started. Tap to join the waiting room! 💦">
     <meta property="og:image" content="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -18,189 +16,248 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; background: #000; overflow: hidden; user-select: none; color: #fff; }
         
-        /* Trick 1: Video Simulation Blur */
-        .video-bg { filter: blur(8px) brightness(0.5); transform: scale(1.1); animation: cam-shake 10s infinite; }
-        @keyframes cam-shake { 0%, 100% { transform: scale(1.1) translate(0,0); } 50% { transform: scale(1.15) translate(5px, 5px); } }
+        .video-bg { filter: blur(15px) brightness(0.4); transform: scale(1.1); transition: filter 2s ease; }
+        .glass { background: rgba(15, 15, 20, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         
-        .glass { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        /* Chat Animations */
+        @keyframes slideUpMsg { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .msg-enter { animation: slideUpMsg 0.4s ease-out forwards; }
         
-        /* Trick 13: Heart Rain */
-        .heart { position: absolute; bottom: 0; color: #ef4444; animation: heartUp 3s linear forwards; opacity: 0; }
-        @keyframes heartUp { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-500px) scale(1.5); opacity: 0; } }
+        /* Typing Dots */
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* Trick 20: Brainwash Popup */
-        .brainwash-ui { animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes slideIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        /* Pulse Button */
+        @keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 100% { box-shadow: 0 0 0 25px rgba(16, 185, 129, 0); } }
+        .pulse-btn { animation: pulse-ring 1.5s infinite; }
         
-        /* Trick 9: Fake Selfie Box */
-        .selfie-box { width: 80px; height: 110px; border: 2px solid #fff; border-radius: 8px; background: #222; }
+        .shake-call { animation: shake 0.5s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } }
     </style>
 </head>
-<body onclick="playAudio()">
+<body>
 
     <div class="absolute inset-0 z-0">
-        <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover video-bg">
-    </div>
-
-    <div class="fixed top-6 left-6 z-50 flex items-center gap-3">
-        <div class="bg-red-600 px-2 py-1 rounded flex items-center gap-1 font-bold text-xs">
-            <span class="w-2 h-2 bg-white rounded-full blink"></span> LIVE
-        </div>
-        <div class="glass px-3 py-1 rounded text-xs font-bold">
-            <i class="fas fa-eye mr-1 text-emerald-400"></i> <span id="viewers">1,402</span>
-        </div>
-    </div>
-
-    <div class="fixed top-6 right-6 z-50 text-right font-mono text-[10px] text-zinc-300">
-        <div id="clock">12:00 PM</div>
-        <div class="text-red-500 font-bold blink"><i class="fas fa-battery-quarter"></i> 8%</div>
-    </div>
-
-    <div class="fixed top-16 right-6 z-50 text-[10px] text-emerald-500">
-        <i class="fas fa-signal"></i> 4G LTE <br>
-        <span class="text-[8px] text-zinc-400 uppercase tracking-tighter">Encrypted Connection</span>
-    </div>
-
-    <div id="callStage" class="fixed inset-0 z-[100] flex flex-col justify-between items-center py-20 px-6 transition-all duration-500">
-        <div class="text-center">
-            <div class="w-32 h-32 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4 relative">
-                <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full rounded-full object-cover">
-                <div class="absolute inset-0 rounded-full border-4 border-white/30 animate-ping"></div>
-            </div>
-            <h2 class="text-3xl font-black tracking-tight mb-1">Private Call</h2>
-            <p class="text-emerald-400 font-mono text-xs tracking-[0.2em] blink">INCOMING VIDEO...</p>
-        </div>
-
-        <div class="w-full max-w-xs space-y-2 mb-10" id="chatArea"></div>
-
-        <div class="flex gap-16 items-center">
-            <div onclick="decline()" class="flex flex-col items-center gap-2 cursor-pointer">
-                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition">
-                    <i class="fas fa-phone-slash text-2xl"></i>
-                </div>
-                <span class="text-[10px] font-bold opacity-70">DECLINE</span>
-            </div>
-            <div onclick="accept()" class="flex flex-col items-center gap-2 cursor-pointer">
-                <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.6)] active:scale-90 transition animate-bounce">
-                    <i class="fas fa-video text-3xl"></i>
-                </div>
-                <span class="text-[10px] font-bold">ACCEPT</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="brainwashStage" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/90">
-        <div class="glass w-full max-w-sm rounded-3xl overflow-hidden brainwash-ui border border-emerald-500/20">
-            <div class="p-6 text-center">
-                <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-unlock-alt text-2xl text-emerald-500"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-2">Account Required</h3>
-                <p class="text-sm text-zinc-400 leading-relaxed mb-6">
-                    To access my 24/7 private room, you must create a <span class="text-white font-bold">Free Guest ID</span>. <br><br>
-                    <span class="text-emerald-400 font-bold italic">Why?</span> This prevents bots and keeps my room secure. Sign up with your <span class="text-white border-b border-white">Email Address</span> on the next page. <br><br>
-                    <span class="text-xs">Once verified, you'll have lifetime access! 🔞</span>
-                </p>
-
-                <button onclick="fireRedirect()" class="w-full py-4 bg-emerald-500 text-black font-black text-lg rounded-2xl shadow-xl hover:scale-105 transition transform flex items-center justify-center gap-3">
-                    VERIFY & START CAM <i class="fas fa-arrow-right"></i>
-                </button>
-                <div class="mt-4 flex items-center justify-center gap-4 text-zinc-500 text-[10px]">
-                    <span><i class="fas fa-shield-check"></i> NO CARD</span>
-                    <span><i class="fas fa-user-secret"></i> ANONYMOUS</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="fixed bottom-6 right-6 z-50 selfie-box overflow-hidden flex items-center justify-center border-white/20">
-        <i class="fas fa-user text-zinc-700 text-3xl"></i>
-        <div class="absolute top-1 right-1 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+        <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover video-bg" id="bgImg">
     </div>
 
     <audio id="ringtone" loop>
         <source src="https://www.soundjay.com/phone/phone-calling-1.mp3" type="audio/mpeg">
     </audio>
 
-    <script>
-        // আপনার ট্রাফি বা অ্যাফিজার স্মার্টলিংক
-        const SMARTLINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
+    <div id="phase1-gate" class="fixed inset-0 z-[300] bg-black/80 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
+        <div class="w-24 h-24 rounded-full border-4 border-emerald-500 overflow-hidden mb-6 pulse-btn">
+            <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full object-cover">
+        </div>
+        <h2 class="text-2xl font-black text-white mb-2">Private Room #69</h2>
+        <p class="text-emerald-400 font-mono text-sm mb-8"><i class="fas fa-circle text-[8px] animate-pulse relative -top-0.5 mr-1"></i> LIVE NOW</p>
         
-        // Trick 16: Live Clock
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        <button onclick="enterWaitingRoom()" class="w-full max-w-xs py-4 bg-emerald-500 text-black font-black text-lg rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.4)] transition transform active:scale-95">
+            TAP TO ENTER ROOM
+        </button>
+    </div>
+
+    <div id="phase2-waiting" class="fixed inset-0 z-50 hidden flex flex-col justify-between py-8 px-4 pointer-events-none">
+        
+        <div class="flex justify-between items-center">
+            <div class="glass px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
+                <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                <span id="viewerCount">1,842</span> Viewers
+            </div>
+            <div class="text-[10px] text-zinc-400 font-mono text-right">
+                Encrypted P2P<br><span class="text-emerald-500">Secure</span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col justify-end pb-10">
+            <div class="glass w-full max-w-sm mx-auto p-4 rounded-2xl border-emerald-500/30 border">
+                <div class="flex items-center gap-3 mb-4 border-b border-white/10 pb-3">
+                    <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <h3 class="font-bold text-sm text-white">Host is online</h3>
+                        <p class="text-xs text-emerald-400 font-mono" id="systemStatus">Setting up camera...</p>
+                    </div>
+                </div>
+                
+                <div id="liveChat" class="space-y-3 min-h-[100px] flex flex-col justify-end">
+                    <div id="typingIndicator" class="hidden flex gap-1 items-center px-2 py-1">
+                        <span class="text-xs text-zinc-400 mr-2">Host is typing</span>
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="phase3-call" class="fixed inset-0 z-[100] hidden flex flex-col justify-between items-center py-20 px-6 bg-black/40 backdrop-blur-md transition-all">
+        <div class="text-center mt-10">
+            <h2 class="text-emerald-400 font-mono text-sm tracking-widest mb-4 animate-pulse">🎯 YOU WERE SELECTED!</h2>
+            <div class="w-32 h-32 rounded-full border-4 border-white p-1 mx-auto mb-4 relative shadow-[0_0_50px_rgba(255,255,255,0.3)] shake-call">
+                <img src="https://github.com/tzierme-rgb/photo/blob/main/028D519.jpg?raw=true" class="w-full h-full rounded-full object-cover">
+            </div>
+            <h2 class="text-3xl font-black text-white mb-2">Host Calling...</h2>
+            <p class="text-zinc-300 text-sm">Private Video Request</p>
+        </div>
+
+        <div class="flex gap-12 items-center mb-10">
+            <button onclick="declineCall()" class="flex flex-col items-center gap-2 cursor-pointer transition transform active:scale-90">
+                <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fas fa-times text-2xl text-white"></i>
+                </div>
+                <span class="text-white text-[10px] font-bold tracking-wider">REJECT</span>
+            </button>
+            
+            <button onclick="acceptCall()" class="flex flex-col items-center gap-2 cursor-pointer transition transform active:scale-90">
+                <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center pulse-btn shadow-lg">
+                    <i class="fas fa-video text-3xl text-white"></i>
+                </div>
+                <span class="text-white text-[10px] font-bold tracking-wider">ACCEPT & JOIN</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="phase4-brainwash" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4 bg-black/95">
+        <div class="glass w-full max-w-sm rounded-3xl overflow-hidden border border-emerald-500/30 relative">
+            
+            <div class="h-1 w-full bg-zinc-800 absolute top-0 left-0">
+                <div class="h-full bg-emerald-500 w-1/3" style="animation: loadBar 2s forwards;"></div>
+            </div>
+            <style>@keyframes loadBar { to { w-full } }</style>
+
+            <div class="p-6 text-center mt-2">
+                <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-2xl text-red-500"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">Room Locked</h3>
+                
+                <div class="bg-black/50 rounded-xl p-4 border border-zinc-800 mb-6 text-left space-y-3">
+                    <p class="text-sm text-zinc-300">You successfully caught the private call! But before we start...</p>
+                    <div class="flex gap-2 items-start">
+                        <i class="fas fa-check-circle text-emerald-500 mt-0.5"></i>
+                        <p class="text-[13px] text-zinc-400">Please verify you are human to prevent stream bots.</p>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <i class="fas fa-envelope text-emerald-500 mt-0.5"></i>
+                        <p class="text-[13px] text-zinc-400">Create a <strong class="text-white">Free Account</strong> with your <strong class="text-emerald-400">Email Address</strong> on the next page.</p>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <i class="fas fa-infinity text-emerald-500 mt-0.5"></i>
+                        <p class="text-[13px] text-zinc-400">Done! You get <strong class="text-white">lifetime 24/7 access</strong> without verifying again.</p>
+                    </div>
+                </div>
+
+                <button onclick="finalRedirect()" class="w-full py-4 bg-emerald-500 text-black font-black text-lg rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:scale-105 transition transform flex items-center justify-center gap-2">
+                    <i class="fas fa-user-check"></i> VERIFY EMAIL NOW
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SMARTLINK = "https://bedjfha.litracksm.com/s/62b4abc4a39b9?preland=Adult";
+        let vibeInterval;
+
+        // Start the journey
+        function enterWaitingRoom() {
+            // Unmute trick for mobile browsers
+            document.getElementById('ringtone').play().then(() => {
+                document.getElementById('ringtone').pause(); 
+            }).catch(e => console.log(e));
+
+            if(navigator.vibrate) navigator.vibrate(50);
+            
+            document.getElementById('phase1-gate').classList.add('hidden');
+            document.getElementById('phase2-waiting').classList.remove('hidden');
+            
+            startLiveSimulation();
         }
-        setInterval(updateClock, 1000); updateClock();
 
-        // Trick 2: Fluctuating Viewers
-        setInterval(() => {
-            const v = 1400 + Math.floor(Math.random() * 50);
-            document.getElementById('viewers').innerText = v.toLocaleString();
-        }, 3000);
+        // Timeline Logic
+        function startLiveSimulation() {
+            const chat = document.getElementById('liveChat');
+            const typeInd = document.getElementById('typingIndicator');
+            const sysStat = document.getElementById('systemStatus');
 
-        // Trick 7: Fake Chat Messages
-        const msgs = ["Hey!", "Pick up please...", "I'm waiting 💦", "Connect now! ❤️"];
-        let mIdx = 0;
-        function sendMsg() {
-            if(mIdx < msgs.length) {
-                const div = document.createElement('div');
-                div.className = "glass px-3 py-2 rounded-2xl rounded-tl-none text-xs w-max animate-bounce";
-                div.innerHTML = msgs[mIdx] + ' <i class="fas fa-check-double text-blue-500 ml-1"></i>';
-                document.getElementById('chatArea').appendChild(div);
-                mIdx++;
-                setTimeout(sendMsg, 2500);
+            // 1s: Host starts typing
+            setTimeout(() => { typeInd.classList.remove('hidden'); }, 1000);
+
+            // 3s: First Message
+            setTimeout(() => {
+                typeInd.classList.add('hidden');
+                addMsg("Hey guys! Room is getting full... 🔥");
+            }, 3000);
+
+            // 4.5s: Host typing again
+            setTimeout(() => { typeInd.classList.remove('hidden'); }, 4500);
+
+            // 6s: Second Message (The Lottery hook)
+            setTimeout(() => {
+                typeInd.classList.add('hidden');
+                addMsg("I'm picking ONE random person right now for a private 1-on-1 call... ❤️");
+                sysStat.innerText = "Selecting random viewer...";
+                sysStat.classList.add('text-red-400', 'animate-pulse');
+            }, 6000);
+
+            // 9s: Selection made
+            setTimeout(() => {
+                sysStat.innerText = "Viewer selected. Initiating P2P Call...";
+            }, 9000);
+
+            // 10s: TRIGGER THE CALL
+            setTimeout(() => {
+                triggerCall();
+            }, 10500);
+        }
+
+        function addMsg(text) {
+            const div = document.createElement('div');
+            div.className = "bg-zinc-800/80 text-white text-sm px-4 py-2 rounded-2xl rounded-tl-none w-max msg-enter border border-white/5";
+            div.innerText = text;
+            const chatBox = document.getElementById('liveChat');
+            chatBox.insertBefore(div, document.getElementById('typingIndicator'));
+        }
+
+        function triggerCall() {
+            // Switch UI
+            document.getElementById('phase2-waiting').classList.add('hidden');
+            document.getElementById('phase3-call').classList.remove('hidden');
+            document.getElementById('bgImg').classList.remove('video-bg');
+            document.getElementById('bgImg').style.filter = "blur(5px) brightness(0.6)";
+
+            // Play Audio & Vibrate
+            document.getElementById('ringtone').play();
+            if(navigator.vibrate) {
+                vibeInterval = setInterval(() => navigator.vibrate([500, 200, 500]), 1200);
             }
         }
-        setTimeout(sendMsg, 1500);
 
-        // Trick 13: Heart Rain Loop
-        setInterval(() => {
-            const heart = document.createElement('i');
-            heart.className = 'fas fa-heart heart';
-            heart.style.left = Math.random() * 100 + 'vw';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 3000);
-        }, 500);
-
-        // Trick 11: Sound Logic
-        function playAudio() {
-            const ring = document.getElementById('ringtone');
-            ring.play().catch(() => {});
+        function declineCall() {
+            alert("Warning: You will lose your VIP spot!");
         }
 
-        function decline() {
-            alert("Connection error! Please try to Accept.");
-        }
-
-        // Trick 20: Accept to Brainwash
-        function accept() {
-            const ring = document.getElementById('ringtone');
-            ring.pause();
+        function acceptCall() {
+            // Stop Audio/Vibe
+            document.getElementById('ringtone').pause();
+            if(vibeInterval) clearInterval(vibeInterval);
             if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            
-            document.getElementById('callStage').style.opacity = '0';
+
+            // Switch to Brainwash
+            document.getElementById('phase3-call').style.opacity = '0';
             setTimeout(() => {
-                document.getElementById('callStage').classList.add('hidden');
-                document.getElementById('brainwashStage').classList.remove('hidden');
+                document.getElementById('phase3-call').classList.add('hidden');
+                document.getElementById('phase4-brainwash').classList.remove('hidden');
                 document.getElementById('bgImg').style.filter = "blur(30px) brightness(0.2)";
-            }, 500);
+            }, 300);
         }
 
-        // Final Master Redirect
-        function fireRedirect() {
+        function finalRedirect() {
             if(navigator.vibrate) navigator.vibrate(50);
-            window.location.href = SMARTLINK;
+            window.location.replace(SMARTLINK);
         }
-
-        // Trick 12: Anti-Bounce (Back Button)
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            window.location.href = SMARTLINK;
-        };
     </script>
 </body>
 </html>
